@@ -62,7 +62,7 @@ export default async function Project() {
                 <div className="flex flex-col justify-center align-middle items-center gap-10 " >
                     {/* //project mapping */}
                     {projects.map((data) => (
-                        <div key={data.id} className=" group grid grid-cols-5 w-[80vw] h-[60vh] bg-slate-800 backdrop-blur-3xl p-10 space-x-2 rounded-sm " >
+                        <div key={data.id} className=" group grid grid-cols-5 w-[80vw]  bg-slate-800 backdrop-blur-3xl p-10 space-x-2 rounded-sm " >
 
                             <div className="col-span-3 h-full border border-white/30 rounded-2xl flex flex-col " >
                                 {/* //header of component */}
@@ -88,7 +88,7 @@ export default async function Project() {
                                             </div>
                                         ))}
                                     </div>
-                                    <div className=" flex gap-10 justify-start align-middle items-center pt-4 " >
+                                    <div className=" flex gap-10 justify-start align-middle items-center pb-4 " >
                                         {data.link_To_Live && (
                                             <a href={data.link_To_Live} target="_blank" rel="noopener noreferrer" className="bg-blue-900 px-10 py-2 font-mono rounded-2xl border-white border-2 hover:drop-shadow-blue-400 drop-shadow-xl backdrop-blur-3xl hover:scale-110 transition-all duration-200 ease-in-out" >To Live Preview</a>
                                         )}

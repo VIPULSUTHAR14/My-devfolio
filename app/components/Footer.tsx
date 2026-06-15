@@ -76,7 +76,7 @@ export default function Footer() {
                         {/* Social Icons */}
                         <div className="flex items-center space-x-4">
                             <a
-                                href="#"
+                                href="https://github.com/VIPULSUTHAR14"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-3 bg-slate-900 border border-white/10 rounded-full hover:bg-slate-800 hover:text-cyan-400 hover:border-cyan-400/40 transition-all duration-300 ease-in-out group"
@@ -85,7 +85,7 @@ export default function Footer() {
                                 <GithubIcon className="size-5 group-hover:scale-110 transition-transform" />
                             </a>
                             <a
-                                href="#"
+                                href="https://www.linkedin.com/in/vipul-suthar-172028333/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-3 bg-slate-900 border border-white/10 rounded-full hover:bg-slate-800 hover:text-blue-400 hover:border-blue-400/40 transition-all duration-300 ease-in-out group"
