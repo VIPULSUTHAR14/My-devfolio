@@ -18,7 +18,7 @@ export default async function Skills() {
 
     return (
         <div id="skills" className="flex flex-col" >
-            <div className="flex justify-start space-x-44 " >
+            <div className="flex justify-start space-x-44 pb-10 " >
                 <h1></h1>
                 <h1 className="text-4xl font-extrabold underline underline-offset-8 decoration-cyan-300 bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-cyan-500 "  >Experties</h1>
             </div>
