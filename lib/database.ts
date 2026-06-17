@@ -34,5 +34,31 @@ export async function Database(): Promise<Mongoose> {
 
     cached.conn = await cached.promise;
 
+    // Migrate skills that don't have skill_number
+    try {
+        const SkillModel = (await import("./models/Skill")).default;
+        const skillsWithoutNumber = await SkillModel.find({
+            $or: [
+                { skill_number: { $exists: false } },
+                { skill_number: null }
+            ]
+        }).sort({ createdAt: 1 });
+
+        if (skillsWithoutNumber.length > 0) {
+            const maxSkill = await SkillModel.findOne({ skill_number: { $exists: true, $ne: null } })
+                .sort({ skill_number: -1 })
+                .lean();
+            let currentMax = maxSkill && typeof maxSkill.skill_number === "number" ? maxSkill.skill_number : 0;
+
+            for (const skill of skillsWithoutNumber) {
+                currentMax += 1;
+                skill.skill_number = currentMax;
+                await skill.save();
+            }
+        }
+    } catch (migrationError) {
+        console.error("Migration failed:", migrationError);
+    }
+
     return cached.conn;
 }

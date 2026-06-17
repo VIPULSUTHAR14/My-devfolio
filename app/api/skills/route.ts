@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 export async function GET() {
     try {
         await Database();
-        const skills = await Skill.find().sort({ createdAt: -1 });
+        const skills = await Skill.find().sort({ skill_number: 1 });
         return NextResponse.json(skills, { status: 200 });
     } catch (error) {
         console.error("Failed to fetch skills:", error);
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
             );
         }
 
-        const { name, image } = await request.json();
+        const { name, image, skill_number } = await request.json();
 
         if (!name || !image) {
             return NextResponse.json(
@@ -39,7 +39,14 @@ export async function POST(request: Request) {
         }
 
         await Database();
-        const skill = await Skill.create({ name, image });
+        
+        let finalSkillNumber = Number(skill_number);
+        if (skill_number === undefined || skill_number === null || isNaN(finalSkillNumber)) {
+            const maxSkill = await Skill.findOne().sort({ skill_number: -1 }).lean();
+            finalSkillNumber = maxSkill && typeof maxSkill.skill_number === "number" ? maxSkill.skill_number + 1 : 1;
+        }
+
+        const skill = await Skill.create({ name, image, skill_number: finalSkillNumber });
 
         return NextResponse.json(skill, { status: 201 });
     } catch (error) {

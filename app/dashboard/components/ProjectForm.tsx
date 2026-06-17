@@ -6,6 +6,8 @@ interface Skill {
     _id: string;
     name: string;
     image: string;
+    skill_number?: number;
+    createdAt?: string;
 }
 
 interface ProjectImage {
@@ -13,12 +15,27 @@ interface ProjectImage {
     path: string;
 }
 
+interface Project {
+    _id: string;
+    Project_number: string;
+    project_name: string;
+    Project_status: string;
+    Project_type: string;
+    project_description: string;
+    Tech_stack: Skill[];
+    img1: string;
+    link_To_Live?: string;
+    Link_To_Repo?: string;
+}
+
 interface ProjectFormProps {
     onProjectAdded: () => void;
     skills: Skill[];
+    editProject: Project | null;
+    onCancelEdit: () => void;
 }
 
-export default function ProjectForm({ onProjectAdded, skills }: ProjectFormProps) {
+export default function ProjectForm({ onProjectAdded, skills, editProject, onCancelEdit }: ProjectFormProps) {
     const [projectNumber, setProjectNumber] = useState("");
     const [projectName, setProjectName] = useState("");
     const [projectStatus, setProjectStatus] = useState("Completed");
@@ -40,6 +57,30 @@ export default function ProjectForm({ onProjectAdded, skills }: ProjectFormProps
             .then((data) => setProjectImages(data))
             .catch(() => setError("Failed to load project images"));
     }, []);
+
+    useEffect(() => {
+        if (editProject) {
+            setProjectNumber(editProject.Project_number);
+            setProjectName(editProject.project_name);
+            setProjectStatus(editProject.Project_status);
+            setProjectType(editProject.Project_type);
+            setProjectDescription(editProject.project_description);
+            setSelectedSkills(editProject.Tech_stack.map((s) => s._id));
+            setSelectedImage(editProject.img1);
+            setLinkToLive(editProject.link_To_Live || "");
+            setLinkToRepo(editProject.Link_To_Repo || "");
+        } else {
+            setProjectNumber("");
+            setProjectName("");
+            setProjectStatus("Completed");
+            setProjectType("Full Stack Project");
+            setProjectDescription("");
+            setSelectedSkills([]);
+            setSelectedImage("");
+            setLinkToLive("");
+            setLinkToRepo("");
+        }
+    }, [editProject]);
 
     const toggleSkill = (skillId: string) => {
         setSelectedSkills((prev) =>
@@ -68,8 +109,11 @@ export default function ProjectForm({ onProjectAdded, skills }: ProjectFormProps
         setSuccess(false);
 
         try {
-            const res = await fetch("/api/projects", {
-                method: "POST",
+            const url = editProject ? `/api/projects/${editProject._id}` : "/api/projects";
+            const method = editProject ? "PUT" : "POST";
+
+            const res = await fetch(url, {
+                method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     Project_number: projectNumber.trim(),
@@ -86,24 +130,26 @@ export default function ProjectForm({ onProjectAdded, skills }: ProjectFormProps
 
             if (!res.ok) {
                 const data = await res.json();
-                throw new Error(data.error || "Failed to add project");
+                throw new Error(data.error || `Failed to ${editProject ? "update" : "add"} project`);
             }
 
-            // Reset form
-            setProjectNumber("");
-            setProjectName("");
-            setProjectStatus("Completed");
-            setProjectType("Full Stack Project");
-            setProjectDescription("");
-            setSelectedSkills([]);
-            setSelectedImage("");
-            setLinkToLive("");
-            setLinkToRepo("");
+            if (!editProject) {
+                // Reset form
+                setProjectNumber("");
+                setProjectName("");
+                setProjectStatus("Completed");
+                setProjectType("Full Stack Project");
+                setProjectDescription("");
+                setSelectedSkills([]);
+                setSelectedImage("");
+                setLinkToLive("");
+                setLinkToRepo("");
+            }
             setSuccess(true);
             onProjectAdded();
             setTimeout(() => setSuccess(false), 3000);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to add project");
+            setError(err instanceof Error ? err.message : `Failed to ${editProject ? "update" : "add"} project`);
         } finally {
             setLoading(false);
         }
@@ -111,9 +157,11 @@ export default function ProjectForm({ onProjectAdded, skills }: ProjectFormProps
 
     return (
         <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-6 max-h-[85vh] overflow-y-auto custom-scrollbar">
-            <h2 className="text-xl font-bold text-white mb-1">Add New Project</h2>
+            <h2 className="text-xl font-bold text-white mb-1">
+                {editProject ? "Edit Project" : "Add New Project"}
+            </h2>
             <p className="text-sm text-slate-400 mb-6">
-                Enter project details and select tech stack + showcase image
+                {editProject ? "Modify project details and update its content" : "Enter project details and select tech stack + showcase image"}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -318,23 +366,34 @@ export default function ProjectForm({ onProjectAdded, skills }: ProjectFormProps
                 )}
                 {success && (
                     <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
-                        ✓ Project added successfully!
+                        ✓ Project {editProject ? "updated" : "added"} successfully!
                     </div>
                 )}
 
-                {/* Submit Button */}
-                <button
-                    type="submit"
-                    disabled={
-                        loading ||
-                        !projectNumber.trim() ||
-                        !projectName.trim() ||
-                        !selectedImage
-                    }
-                    className="w-full py-3 px-4 bg-gradient-to-r from-cyan-500 to-sky-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 cursor-pointer"
-                >
-                    {loading ? "Adding..." : "Add Project"}
-                </button>
+                {/* Submit & Cancel Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                        type="submit"
+                        disabled={
+                            loading ||
+                            !projectNumber.trim() ||
+                            !projectName.trim() ||
+                            !selectedImage
+                        }
+                        className="flex-1 py-3 px-4 bg-gradient-to-r from-cyan-500 to-sky-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 cursor-pointer"
+                    >
+                        {loading ? (editProject ? "Updating..." : "Adding...") : (editProject ? "Update Project" : "Add Project")}
+                    </button>
+                    {editProject && (
+                        <button
+                            type="button"
+                            onClick={onCancelEdit}
+                            className="py-3 px-6 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl border border-slate-700/60 focus:outline-none focus:ring-2 focus:ring-slate-500/50 transition-all duration-200 cursor-pointer"
+                        >
+                            Cancel
+                        </button>
+                    )}
+                </div>
             </form>
         </div>
     );

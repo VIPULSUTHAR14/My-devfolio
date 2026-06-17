@@ -11,7 +11,8 @@ interface Skill {
     _id: string;
     name: string;
     image: string;
-    createdAt: string;
+    skill_number?: number;
+    createdAt?: string;
 }
 
 interface Project {
@@ -43,6 +44,23 @@ export default function DashboardPage() {
     const [skillsLoading, setSkillsLoading] = useState(true);
     const [projectsLoading, setProjectsLoading] = useState(true);
     const [messagesLoading, setMessagesLoading] = useState(true);
+
+    const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
+
+    const handleSkillAddedOrUpdated = () => {
+        fetchSkills();
+        setEditingSkill(null);
+    };
+
+    const handleProjectAddedOrUpdated = () => {
+        fetchProjects();
+        setEditingProject(null);
+    };
+
+    const nextSkillNumber = skills.length > 0
+        ? Math.max(...skills.map(s => s.skill_number || 0)) + 1
+        : 1;
 
     const fetchSkills = useCallback(async () => {
         try {
@@ -171,11 +189,20 @@ export default function DashboardPage() {
                                 </svg>
                             </div>
                         ) : (
-                            <SkillList skills={skills} onSkillDeleted={fetchSkills} />
+                            <SkillList
+                                skills={skills}
+                                onSkillDeleted={fetchSkills}
+                                onEditSkill={setEditingSkill}
+                            />
                         )}
                     </div>
                     <div className="lg:col-span-2">
-                        <SkillForm onSkillAdded={fetchSkills} />
+                        <SkillForm
+                            onSkillAdded={handleSkillAddedOrUpdated}
+                            editSkill={editingSkill}
+                            onCancelEdit={() => setEditingSkill(null)}
+                            nextSkillNumber={nextSkillNumber}
+                        />
                     </div>
                 </div>
             )}
@@ -184,7 +211,12 @@ export default function DashboardPage() {
                 <div className="flex flex-col gap-8">
                     {/* Form — takes 2 cols */}
                     <div className="lg:col-span-2">
-                        <ProjectForm onProjectAdded={fetchProjects} skills={skills} />
+                        <ProjectForm
+                            onProjectAdded={handleProjectAddedOrUpdated}
+                            skills={skills}
+                            editProject={editingProject}
+                            onCancelEdit={() => setEditingProject(null)}
+                        />
                     </div>
 
                     {/* List — takes 3 cols */}
@@ -215,6 +247,7 @@ export default function DashboardPage() {
                             <ProjectList
                                 projects={projects}
                                 onProjectDeleted={fetchProjects}
+                                onEditProject={setEditingProject}
                             />
                         )}
                     </div>

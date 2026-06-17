@@ -7,13 +7,30 @@ interface Logo {
     path: string;
 }
 
+interface Skill {
+    _id: string;
+    name: string;
+    image: string;
+    skill_number?: number;
+    createdAt?: string;
+}
+
+interface SkillFormProps {
+    onSkillAdded: () => void;
+    editSkill: Skill | null;
+    onCancelEdit: () => void;
+    nextSkillNumber: number;
+}
+
 export default function SkillForm({
     onSkillAdded,
-}: {
-    onSkillAdded: () => void;
-}) {
+    editSkill,
+    onCancelEdit,
+    nextSkillNumber,
+}: SkillFormProps) {
     const [name, setName] = useState("");
     const [selectedLogo, setSelectedLogo] = useState("");
+    const [skillNumber, setSkillNumber] = useState("");
     const [logos, setLogos] = useState<Logo[]>([]);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -26,33 +43,55 @@ export default function SkillForm({
             .catch(() => setError("Failed to load logos"));
     }, []);
 
+    useEffect(() => {
+        if (editSkill) {
+            setName(editSkill.name);
+            setSelectedLogo(editSkill.image);
+            setSkillNumber(editSkill.skill_number !== undefined ? editSkill.skill_number.toString() : "");
+        } else {
+            setName("");
+            setSelectedLogo("");
+            setSkillNumber(nextSkillNumber.toString());
+        }
+    }, [editSkill, nextSkillNumber]);
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        if (!name.trim() || !selectedLogo) return;
+        if (!name.trim() || !selectedLogo || !skillNumber) return;
 
         setLoading(true);
         setError("");
         setSuccess(false);
 
         try {
-            const res = await fetch("/api/skills", {
-                method: "POST",
+            const url = editSkill ? `/api/skills/${editSkill._id}` : "/api/skills";
+            const method = editSkill ? "PUT" : "POST";
+
+            const res = await fetch(url, {
+                method,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: name.trim(), image: selectedLogo }),
+                body: JSON.stringify({
+                    name: name.trim(),
+                    image: selectedLogo,
+                    skill_number: Number(skillNumber),
+                }),
             });
 
             if (!res.ok) {
                 const data = await res.json();
-                throw new Error(data.error || "Failed to add skill");
+                throw new Error(data.error || `Failed to ${editSkill ? "update" : "add"} skill`);
             }
 
-            setName("");
-            setSelectedLogo("");
+            if (!editSkill) {
+                setName("");
+                setSelectedLogo("");
+                setSkillNumber("");
+            }
             setSuccess(true);
             onSkillAdded();
             setTimeout(() => setSuccess(false), 3000);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to add skill");
+            setError(err instanceof Error ? err.message : `Failed to ${editSkill ? "update" : "add"} skill`);
         } finally {
             setLoading(false);
         }
@@ -60,29 +99,51 @@ export default function SkillForm({
 
     return (
         <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-6 w-full">
-            <h2 className="text-xl font-bold text-white mb-1">Add New Skill</h2>
+            <h2 className="text-xl font-bold text-white mb-1">
+                {editSkill ? "Edit Skill" : "Add New Skill"}
+            </h2>
             <p className="text-sm text-slate-400 mb-6">
-                Select a logo and enter the skill name
+                {editSkill ? "Modify skill details and order position" : "Select a logo and enter the skill name"}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Skill Name */}
-                <div>
-                    <label
-                        htmlFor="skill-name"
-                        className="block text-sm font-medium text-slate-300 mb-2"
-                    >
-                        Skill Name
-                    </label>
-                    <input
-                        id="skill-name"
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="e.g. React, Node.js"
-                        required
-                        className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
-                    />
+                {/* Skill Name & Order Number */}
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div className="sm:col-span-3">
+                        <label
+                            htmlFor="skill-name"
+                            className="block text-sm font-medium text-slate-300 mb-2"
+                        >
+                            Skill Name
+                        </label>
+                        <input
+                            id="skill-name"
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="e.g. React, Node.js"
+                            required
+                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
+                        />
+                    </div>
+                    <div>
+                        <label
+                            htmlFor="skill-number"
+                            className="block text-sm font-medium text-slate-300 mb-2"
+                        >
+                            Order Number
+                        </label>
+                        <input
+                            id="skill-number"
+                            type="number"
+                            value={skillNumber}
+                            onChange={(e) => setSkillNumber(e.target.value)}
+                            placeholder="e.g. 1"
+                            required
+                            min="1"
+                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
+                        />
+                    </div>
                 </div>
 
                 {/* Logo Picker */}
@@ -145,44 +206,55 @@ export default function SkillForm({
                 )}
                 {success && (
                     <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm animate-[fadeIn_0.2s_ease-out]">
-                        ✓ Skill added successfully!
+                        ✓ Skill {editSkill ? "updated" : "added"} successfully!
                     </div>
                 )}
 
-                {/* Submit */}
-                <button
-                    id="add-skill-submit"
-                    type="submit"
-                    disabled={loading || !name.trim() || !selectedLogo}
-                    className="w-full py-3 px-4 bg-gradient-to-r from-cyan-500 to-sky-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 cursor-pointer"
-                >
-                    {loading ? (
-                        <span className="flex items-center justify-center gap-2">
-                            <svg
-                                className="animate-spin w-5 h-5"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                            >
-                                <circle
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    strokeWidth="4"
-                                    className="opacity-25"
-                                />
-                                <path
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                    className="opacity-75"
-                                />
-                            </svg>
-                            Adding...
-                        </span>
-                    ) : (
-                        "Add Skill"
+                {/* Submit & Cancel */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                        id="add-skill-submit"
+                        type="submit"
+                        disabled={loading || !name.trim() || !selectedLogo || !skillNumber}
+                        className="flex-1 py-3 px-4 bg-gradient-to-r from-cyan-500 to-sky-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 cursor-pointer"
+                    >
+                        {loading ? (
+                            <span className="flex items-center justify-center gap-2">
+                                <svg
+                                    className="animate-spin w-5 h-5"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                >
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                        className="opacity-25"
+                                    />
+                                    <path
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                        className="opacity-75"
+                                    />
+                                </svg>
+                                {editSkill ? "Updating..." : "Adding..."}
+                            </span>
+                        ) : (
+                            editSkill ? "Update Skill" : "Add Skill"
+                        )}
+                    </button>
+                    {editSkill && (
+                        <button
+                            type="button"
+                            onClick={onCancelEdit}
+                            className="py-3 px-6 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl border border-slate-700/60 focus:outline-none focus:ring-2 focus:ring-slate-500/50 transition-all duration-200 cursor-pointer"
+                        >
+                            Cancel
+                        </button>
                     )}
-                </button>
+                </div>
             </form>
         </div>
     );

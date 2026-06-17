@@ -6,6 +6,8 @@ interface Skill {
     _id: string;
     name: string;
     image: string;
+    skill_number?: number;
+    createdAt?: string;
 }
 
 interface Project {
@@ -24,9 +26,10 @@ interface Project {
 interface ProjectListProps {
     projects: Project[];
     onProjectDeleted: () => void;
+    onEditProject: (project: Project) => void;
 }
 
-export default function ProjectList({ projects, onProjectDeleted }: ProjectListProps) {
+export default function ProjectList({ projects, onProjectDeleted, onEditProject }: ProjectListProps) {
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
     async function handleDelete(id: string) {
@@ -178,12 +181,31 @@ export default function ProjectList({ projects, onProjectDeleted }: ProjectListP
                             )}
                         </div>
 
-                        {/* Delete Button */}
-                        <div className="absolute top-2 right-2 md:relative md:top-auto md:right-auto flex items-start flex-shrink-0">
+                        {/* Actions Overlay */}
+                        <div className="absolute top-2 right-2 md:relative md:top-auto md:right-auto flex items-start gap-1 flex-shrink-0 z-10">
+                            <button
+                                onClick={() => onEditProject(project)}
+                                className="md:opacity-0 md:group-hover:opacity-100 p-2 rounded-lg hover:bg-cyan-500/10 text-slate-550 hover:text-cyan-400 transition-all duration-200 cursor-pointer"
+                                title="Edit project"
+                            >
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    />
+                                </svg>
+                            </button>
                             <button
                                 onClick={() => handleDelete(project._id)}
                                 disabled={deletingId === project._id}
-                                className="md:opacity-0 md:group-hover:opacity-100 p-2 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-all duration-200 disabled:opacity-50 cursor-pointer"
+                                className="md:opacity-0 md:group-hover:opacity-100 p-2 rounded-lg hover:bg-red-500/10 text-slate-550 hover:text-red-400 transition-all duration-200 disabled:opacity-50 cursor-pointer"
                                 title="Delete project"
                             >
                                 {deletingId === project._id ? (

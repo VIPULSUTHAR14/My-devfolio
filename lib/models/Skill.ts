@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface ISkill extends Document {
     name: string;
     image: string;
+    skill_number: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -18,6 +19,10 @@ const SkillSchema = new Schema<ISkill>(
             type: String,
             required: [true, "Skill image is required"],
             trim: true,
+        },
+        skill_number: {
+            type: Number,
+            default: 1,
         },
     },
     {

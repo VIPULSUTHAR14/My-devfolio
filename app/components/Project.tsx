@@ -62,9 +62,9 @@ export default async function Project() {
                 <div className="flex flex-col justify-center align-middle items-center gap-10 " >
                     {/* //project mapping */}
                     {projects.map((data) => (
-                        <div key={data.id} className=" group grid grid-cols-5 w-[80vw]  bg-slate-800 backdrop-blur-3xl p-10 space-x-2 rounded-sm " >
+                        <div key={data.id} className=" group grid grid-cols-4 w-[80vw]  bg-slate-800 backdrop-blur-3xl space-x-2 p-10 rounded-sm " >
 
-                            <div className="col-span-3 h-full border border-white/30 rounded-2xl flex flex-col " >
+                            <div className="col-span-2 h-full border border-white/30 rounded-2xl flex flex-col  " >
                                 {/* //header of component */}
                                 <div className="flex items-center align-middle justify-between py-7 px-7" >
                                     <div className="flex space-x-30">
@@ -102,8 +102,8 @@ export default async function Project() {
                                 </div>
                             </div>
                             {/* //showcase Image div */}
-                            <div className="col-span-2 h-full border border-white/30 rounded-2xl" >
-                                <img src={data.img1} alt="img1 " className="object-cover h-full w-full p-5 rounded-2xl" />
+                            <div className="col-span-2 h-full rounded-2xl" >
+                                <img src={data.img1} alt="img1 " className="object-cover h-full w-full  rounded-2xl" />
                             </div>
                         </div>
                     ))}

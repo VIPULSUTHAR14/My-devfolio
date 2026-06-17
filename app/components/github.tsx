@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from "react";
 
 const lines = [
-    "lucas@macbook ~ % npx create-react-app portfolio",
-    "Creating a new React app in /Users/lucas/portfolio...",
-    "Installing packages. This might take a couple of minutes.",
-    "Success! Created portfolio at /Users/lucas/portfolio. Happy hacking!",
+    "Vipul@portfolio ~ % ./fetch_bio.sh",
+    "Loading profile...",
+    "Name: Vipul Suthar",
+    "Role: Full-Stack Engineer",
+    "Focus: Building scalable React apps and robust Node.js backends.",
+    "Status: Open to work. Ready to deploy."
 ];
 
 const GitHubTerminal = () => {
@@ -77,7 +79,7 @@ const GitHubTerminal = () => {
                     {/* Fallback cursor when everything is done typing */}
                     {lineIndex >= lines.length && (
                         <div className="text-white">
-                            lucas@macbook ~ % <span className="inline-block w-2.5 h-5 bg-gray-400 ml-1 animate-pulse" />
+                            Vipul@victus 15 ~ % <span className="inline-block w-2.5 h-5 bg-gray-400 ml-1 animate-pulse" />
                         </div>
                     )}
                 </div>

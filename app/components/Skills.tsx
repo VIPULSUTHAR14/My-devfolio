@@ -3,7 +3,7 @@ import Skill from "@/lib/models/Skill";
 
 export default async function Skills() {
     await Database();
-    const skills = await Skill.find().sort({ createdAt: -1 }).lean();
+    const skills = await Skill.find().sort({ skill_number: 1 }).lean();
 
     // Convert mongoose documents to plain objects
     const data = skills.map((skill) => ({
