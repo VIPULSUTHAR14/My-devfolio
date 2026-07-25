@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Lock, Mail, ArrowLeft, KeyRound, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -19,7 +20,7 @@ export default function LoginPage() {
 
         try {
             const result = await signIn("credentials", {
-                email,
+                email: email.trim().toLowerCase(),
                 password,
                 redirect: false,
             });
@@ -38,96 +39,92 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
-            {/* Background glow effects */}
+        <div className="min-h-screen bg-[#10131a] text-[#e1e2ec] flex items-center justify-center px-4 relative overflow-hidden font-sans">
+            {/* Background Ambient Glows */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[120px]" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-[120px]" />
+                <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-[#adc6ff]/10 rounded-full blur-[150px]" />
+                <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-[#ddb7ff]/10 rounded-full blur-[150px]" />
             </div>
 
-            <div className="relative w-full max-w-md">
-                {/* Card */}
-                <div className="bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl shadow-black/20">
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-sky-600 mb-4 shadow-lg shadow-cyan-500/20">
-                            <svg
-                                className="w-8 h-8 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                                />
-                            </svg>
+            <div className="relative w-full max-w-md space-y-6">
+                {/* Glass Card Container */}
+                <div className="glass-card rounded-[2rem] p-8 md:p-10 border border-white/10 shadow-2xl relative">
+                    {/* Header Icon & Title */}
+                    <div className="text-center mb-8 space-y-3">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#adc6ff] to-[#4d8eff] text-[#00285d] mb-2 shadow-lg shadow-[#adc6ff]/20">
+                            <Lock className="w-8 h-8" />
                         </div>
-                        <h1 className="text-2xl font-bold text-white">
-                            Admin Login
+                        <h1 className="text-3xl font-extrabold text-white tracking-tight">
+                            Admin Access
                         </h1>
-                        <p className="text-slate-400 mt-2 text-sm">
-                            Sign in to access the dashboard
+                        <p className="text-[#c2c6d6] text-sm font-mono">
+                            Sign in to manage your portfolio
                         </p>
                     </div>
 
-                    {/* Error */}
+                    {/* Error Banner */}
                     {error && (
-                        <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center animate-[fadeIn_0.2s_ease-out]">
-                            {error}
+                        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 shrink-0" />
+                            <span>{error}</span>
                         </div>
                     )}
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        <div>
-                            <label
-                                htmlFor="login-email"
-                                className="block text-sm font-medium text-slate-300 mb-2"
-                            >
-                                Email
-                            </label>
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        {/* Floating Email Field */}
+                        <div className="relative floating-label-input group">
                             <input
                                 id="login-email"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="your@email.com"
+                                placeholder=" "
                                 required
-                                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
+                                disabled={loading}
+                                className="w-full bg-transparent border-0 border-b border-white/20 focus:ring-0 focus:border-[#adc6ff] pt-4 pb-2 text-white font-sans text-base transition-all peer outline-none disabled:opacity-60"
                             />
+                            <label
+                                htmlFor="login-email"
+                                className="absolute left-0 top-4 text-[#c2c6d6] transition-all cursor-text peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-xs flex items-center gap-1.5"
+                            >
+                                <Mail className="w-3.5 h-3.5" />
+                                Email Address
+                            </label>
                         </div>
 
-                        <div>
-                            <label
-                                htmlFor="login-password"
-                                className="block text-sm font-medium text-slate-300 mb-2"
-                            >
-                                Password
-                            </label>
+                        {/* Floating Password Field */}
+                        <div className="relative floating-label-input group">
                             <input
                                 id="login-password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••"
+                                placeholder=" "
                                 required
-                                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
+                                disabled={loading}
+                                className="w-full bg-transparent border-0 border-b border-white/20 focus:ring-0 focus:border-[#adc6ff] pt-4 pb-2 text-white font-sans text-base transition-all peer outline-none disabled:opacity-60"
                             />
+                            <label
+                                htmlFor="login-password"
+                                className="absolute left-0 top-4 text-[#c2c6d6] transition-all cursor-text peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-xs flex items-center gap-1.5"
+                            >
+                                <KeyRound className="w-3.5 h-3.5" />
+                                Password
+                            </label>
                         </div>
 
+                        {/* Submit Button */}
                         <button
                             id="login-submit"
                             type="submit"
                             disabled={loading}
-                            className="w-full py-3 px-4 bg-gradient-to-r from-cyan-500 to-sky-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 cursor-pointer"
+                            className="w-full py-4 bg-gradient-to-r from-[#adc6ff] to-[#ddb7ff] text-[#00285d] font-bold rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-lg shadow-[#adc6ff]/20 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                         >
                             {loading ? (
-                                <span className="flex items-center justify-center gap-2">
+                                <span className="flex items-center justify-center gap-2 font-mono text-sm">
                                     <svg
-                                        className="animate-spin w-5 h-5"
+                                        className="animate-spin w-4 h-4 text-[#00285d]"
                                         viewBox="0 0 24 24"
                                         fill="none"
                                     >
@@ -145,7 +142,7 @@ export default function LoginPage() {
                                             className="opacity-75"
                                         />
                                     </svg>
-                                    Signing in...
+                                    Authenticating...
                                 </span>
                             ) : (
                                 "Sign In"
@@ -155,12 +152,13 @@ export default function LoginPage() {
                 </div>
 
                 {/* Back to portfolio */}
-                <div className="text-center mt-6">
+                <div className="text-center">
                     <Link
                         href="/"
-                        className="text-slate-500 hover:text-cyan-400 text-sm transition-colors duration-200"
+                        className="inline-flex items-center gap-2 text-xs font-mono text-[#c2c6d6] hover:text-[#adc6ff] transition-colors"
                     >
-                        ← Back to portfolio
+                        <ArrowLeft className="w-3.5 h-3.5" />
+                        <span>Back to portfolio</span>
                     </Link>
                 </div>
             </div>

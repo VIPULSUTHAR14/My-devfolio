@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Check, Plus, Save, X, AlertCircle } from "lucide-react";
 
 interface Logo {
     name: string;
@@ -98,13 +99,15 @@ export default function SkillForm({
     }
 
     return (
-        <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-6 w-full">
-            <h2 className="text-xl font-bold text-white mb-1">
-                {editSkill ? "Edit Skill" : "Add New Skill"}
-            </h2>
-            <p className="text-sm text-slate-400 mb-6">
-                {editSkill ? "Modify skill details and order position" : "Select a logo and enter the skill name"}
-            </p>
+        <div className="glass-card rounded-3xl p-8 border border-white/10 shadow-xl space-y-6">
+            <div>
+                <h3 className="text-xl font-bold text-white font-mono">
+                    {editSkill ? "Edit Skill" : "Add New Skill"}
+                </h3>
+                <p className="text-xs text-[#c2c6d6] font-mono mt-1">
+                    {editSkill ? "Modify skill details and order position" : "Select an icon and enter the skill details"}
+                </p>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Skill Name & Order Number */}
@@ -112,7 +115,7 @@ export default function SkillForm({
                     <div className="sm:col-span-3">
                         <label
                             htmlFor="skill-name"
-                            className="block text-sm font-medium text-slate-300 mb-2"
+                            className="block text-xs font-mono text-[#c2c6d6] mb-2 uppercase tracking-wider"
                         >
                             Skill Name
                         </label>
@@ -123,73 +126,62 @@ export default function SkillForm({
                             onChange={(e) => setName(e.target.value)}
                             placeholder="e.g. React, Node.js"
                             required
-                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
+                            className="w-full px-4 py-3 bg-[#191b23] border border-white/10 rounded-xl text-white placeholder-slate-500 font-mono text-sm focus:outline-none focus:border-[#adc6ff] transition-colors"
                         />
                     </div>
                     <div>
                         <label
                             htmlFor="skill-number"
-                            className="block text-sm font-medium text-slate-300 mb-2"
+                            className="block text-xs font-mono text-[#c2c6d6] mb-2 uppercase tracking-wider"
                         >
-                            Order Number
+                            Order #
                         </label>
                         <input
                             id="skill-number"
                             type="number"
                             value={skillNumber}
                             onChange={(e) => setSkillNumber(e.target.value)}
-                            placeholder="e.g. 1"
+                            placeholder="1"
                             required
                             min="1"
-                            className="w-full px-4 py-3 bg-slate-800/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-200"
+                            className="w-full px-4 py-3 bg-[#191b23] border border-white/10 rounded-xl text-white font-mono text-sm focus:outline-none focus:border-[#adc6ff] transition-colors"
                         />
                     </div>
                 </div>
 
                 {/* Logo Picker */}
-                <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-3">
-                        Select Logo
+                <div className="space-y-3">
+                    <label className="block text-xs font-mono text-[#c2c6d6] uppercase tracking-wider">
+                        Select Icon Logo
                     </label>
                     {logos.length === 0 ? (
-                        <p className="text-slate-500 text-sm">
-                            Loading logos...
+                        <p className="text-[#c2c6d6] text-xs font-mono">
+                            Loading available logos...
                         </p>
                     ) : (
-                        <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-3">
+                        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-56 overflow-y-auto pr-1">
                             {logos.map((logo) => (
                                 <button
                                     key={logo.path}
                                     type="button"
                                     onClick={() => setSelectedLogo(logo.path)}
-                                    className={`group relative aspect-square rounded-xl border-2 flex flex-col items-center justify-center p-3 transition-all duration-200 cursor-pointer ${selectedLogo === logo.path
-                                        ? "border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-500/10 scale-105"
-                                        : "border-slate-700/50 bg-slate-800/30 hover:border-slate-500/50 hover:bg-slate-800/50"
-                                        }`}
+                                    className={`relative aspect-square rounded-xl border flex flex-col items-center justify-center p-2.5 transition-all cursor-pointer ${
+                                        selectedLogo === logo.path
+                                            ? "border-[#adc6ff] bg-[#adc6ff]/10 shadow-md shadow-[#adc6ff]/10 scale-105"
+                                            : "border-white/10 bg-[#191b23] hover:border-white/20 hover:bg-[#1d2027]"
+                                    }`}
                                 >
                                     <img
                                         src={`/${logo.path}`}
                                         alt={logo.name}
-                                        className="size-20 object-contain"
+                                        className="w-8 h-8 object-contain"
                                     />
-                                    <span className="text-lg font-mono  text-white mt-1.5 truncate w-full text-center group-hover:text-slate-300 transition-colors">
+                                    <span className="text-[10px] font-mono text-[#c2c6d6] mt-1.5 truncate w-full text-center">
                                         {logo.name}
                                     </span>
                                     {selectedLogo === logo.path && (
-                                        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-cyan-500 rounded-full flex items-center justify-center shadow-lg animate-[fadeIn_0.15s_ease-out]">
-                                            <svg
-                                                className="w-3 h-3 text-white"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                                strokeWidth={3}
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M5 13l4 4L19 7"
-                                                />
-                                            </svg>
+                                        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#adc6ff] text-[#00285d] rounded-full flex items-center justify-center shadow-lg">
+                                            <Check className="w-3 h-3 stroke-[3]" />
                                         </div>
                                     )}
                                 </button>
@@ -198,60 +190,39 @@ export default function SkillForm({
                     )}
                 </div>
 
-                {/* Feedback */}
+                {/* Feedback Banners */}
                 {error && (
-                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                        {error}
+                    <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <span>{error}</span>
                     </div>
                 )}
                 {success && (
-                    <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm animate-[fadeIn_0.2s_ease-out]">
-                        ✓ Skill {editSkill ? "updated" : "added"} successfully!
+                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono flex items-center gap-2">
+                        <Check className="w-4 h-4 shrink-0" />
+                        <span>✓ Skill {editSkill ? "updated" : "added"} successfully!</span>
                     </div>
                 )}
 
                 {/* Submit & Cancel */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex gap-3 pt-2">
                     <button
                         id="add-skill-submit"
                         type="submit"
                         disabled={loading || !name.trim() || !selectedLogo || !skillNumber}
-                        className="flex-1 py-3 px-4 bg-gradient-to-r from-cyan-500 to-sky-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 cursor-pointer"
+                        className="flex-1 py-3 px-4 bg-gradient-to-r from-[#adc6ff] to-[#ddb7ff] text-[#00285d] font-bold text-sm rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-transform disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-lg shadow-[#adc6ff]/20 flex items-center justify-center gap-2"
                     >
-                        {loading ? (
-                            <span className="flex items-center justify-center gap-2">
-                                <svg
-                                    className="animate-spin w-5 h-5"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                >
-                                    <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        strokeWidth="4"
-                                        className="opacity-25"
-                                    />
-                                    <path
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                        className="opacity-75"
-                                    />
-                                </svg>
-                                {editSkill ? "Updating..." : "Adding..."}
-                            </span>
-                        ) : (
-                            editSkill ? "Update Skill" : "Add Skill"
-                        )}
+                        {editSkill ? <Save className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                        <span>{loading ? "Saving..." : editSkill ? "Update Skill" : "Add Skill"}</span>
                     </button>
                     {editSkill && (
                         <button
                             type="button"
                             onClick={onCancelEdit}
-                            className="py-3 px-6 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl border border-slate-700/60 focus:outline-none focus:ring-2 focus:ring-slate-500/50 transition-all duration-200 cursor-pointer"
+                            className="py-3 px-5 bg-[#191b23] hover:bg-[#1d2027] text-white font-mono text-xs rounded-xl border border-white/10 transition-colors cursor-pointer flex items-center gap-1.5"
                         >
-                            Cancel
+                            <X className="w-4 h-4" />
+                            <span>Cancel</span>
                         </button>
                     )}
                 </div>

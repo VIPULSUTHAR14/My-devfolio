@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState } from "react";
-import { Mail, Copy, Check, ArrowUp } from "lucide-react";
+import { ArrowUp, Mail, Copy, Check } from "lucide-react";
 
-// Custom SVG components for GitHub and LinkedIn to bypass missing export issue in lucide-react v1.17.0
-const GithubIcon = ({ className = "size-5" }: { className?: string }) => (
+const GithubIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -20,7 +19,7 @@ const GithubIcon = ({ className = "size-5" }: { className?: string }) => (
     </svg>
 );
 
-const LinkedinIcon = ({ className = "size-5" }: { className?: string }) => (
+const LinkedinIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -39,7 +38,7 @@ const LinkedinIcon = ({ className = "size-5" }: { className?: string }) => (
 
 export default function Footer() {
     const [copied, setCopied] = useState(false);
-    const emailAddress = "vipulsuthar@example.com"; // Placeholder email - user can update later
+    const emailAddress = "vipulsuthar9351@gmail.com";
 
     const copyToClipboard = async () => {
         try {
@@ -56,145 +55,82 @@ export default function Footer() {
     };
 
     return (
-        <footer className="w-full bg-slate-950 border-t border-white/10 text-slate-300 py-16 px-6 md:px-20 lg:px-32" >
-            <div className="max-w-7xl mx-auto flex flex-col space-y-12">
-
-                {/* Main Footer Content */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-
-                    {/* Left Column: Brand & Socials */}
-                    <div className="space-y-6">
-                        <div>
-                            <p className="text-3xl font-extrabold text-white tracking-tight" >
-                                ~/Vipul.Dev
-                            </p>
-                            <p className="text-slate-400 mt-3 font-mono text-sm leading-relaxed max-w-sm">
-                                Fresher Full-Stack Engineer crafting scalable digital experiences, high-performance web applications, and elegant user interfaces.
-                            </p>
-                        </div>
-
-                        {/* Social Icons */}
-                        <div className="flex items-center space-x-4">
-                            <a
-                                href="https://github.com/VIPULSUTHAR14"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-3 bg-slate-900 border border-white/10 rounded-full hover:bg-slate-800 hover:text-cyan-400 hover:border-cyan-400/40 transition-all duration-300 ease-in-out group"
-                                aria-label="GitHub Profile"
-                            >
-                                <GithubIcon className="size-5 group-hover:scale-110 transition-transform" />
-                            </a>
-                            <a
-                                href="https://www.linkedin.com/in/vipul-suthar-172028333/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-3 bg-slate-900 border border-white/10 rounded-full hover:bg-slate-800 hover:text-blue-400 hover:border-blue-400/40 transition-all duration-300 ease-in-out group"
-                                aria-label="LinkedIn Profile"
-                            >
-                                <LinkedinIcon className="size-5 group-hover:scale-110 transition-transform" />
-                            </a>
-                            <button
-                                onClick={copyToClipboard}
-                                className="p-3 bg-slate-900 border border-white/10 rounded-full hover:bg-slate-800 hover:text-emerald-400 hover:border-emerald-400/40 transition-all duration-300 ease-in-out group relative cursor-pointer"
-                                aria-label="Copy Email"
-                            >
-                                <Mail className="size-5 group-hover:scale-110 transition-transform" />
-                                {copied && (
-                                    <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-emerald-500 text-slate-950 font-mono text-xs font-bold py-1 px-2.5 rounded shadow-lg animate-bounce whitespace-nowrap">
-                                        Copied!
-                                    </span>
-                                )}
-                            </button>
-                        </div>
+        <footer className="w-full py-16 px-6 md:px-12 max-w-7xl mx-auto flex flex-col gap-12 border-t border-white/10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                {/* Brand Column */}
+                <div className="space-y-4 max-w-sm">
+                    <div className="text-2xl font-bold font-mono text-[#adc6ff]">~/Vipul.Dev</div>
+                    <p className="text-[#c2c6d6] text-sm leading-relaxed">
+                        Building high-performance digital experiences with code, precision, and passion.
+                    </p>
+                    <div className="flex items-center gap-3 pt-2">
+                        <a
+                            href="https://github.com/VIPULSUTHAR14"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-3 glass-card rounded-xl border border-white/10 hover:border-[#adc6ff]/40 text-[#c2c6d6] hover:text-[#adc6ff] transition-colors"
+                            aria-label="GitHub Profile"
+                        >
+                            <GithubIcon />
+                        </a>
+                        <a
+                            href="https://www.linkedin.com/in/vipul-suthar-172028333/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-3 glass-card rounded-xl border border-white/10 hover:border-[#ddb7ff]/40 text-[#c2c6d6] hover:text-[#ddb7ff] transition-colors"
+                            aria-label="LinkedIn Profile"
+                        >
+                            <LinkedinIcon />
+                        </a>
+                        <button
+                            onClick={copyToClipboard}
+                            className="p-3 glass-card rounded-xl border border-white/10 hover:border-emerald-400/40 text-[#c2c6d6] hover:text-emerald-400 transition-colors relative cursor-pointer"
+                            aria-label="Copy Email"
+                        >
+                            <Mail className="w-5 h-5" />
+                            {copied && (
+                                <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-emerald-500 text-[#10131a] font-mono text-xs font-bold py-1 px-2 rounded shadow-lg whitespace-nowrap">
+                                    Copied!
+                                </span>
+                            )}
+                        </button>
                     </div>
+                </div>
 
-                    {/* Middle Column: Section Links */}
-                    <div className="space-y-4">
-                        <p className="text-lg font-mono font-bold text-white tracking-wider uppercase">
-                            Navigation
-                        </p>
-                        <ul className="space-y-3 font-mono text-sm">
-                            <li>
-                                <a
-                                    href="#home"
-                                    className="text-slate-400 hover:text-cyan-400 hover:pl-2 transition-all duration-300 ease-in-out block"
-                                >
-                                    &gt; Home
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#skills"
-                                    className="text-slate-400 hover:text-cyan-400 hover:pl-2 transition-all duration-300 ease-in-out block"
-                                >
-                                    &gt; Skill
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#projects"
-                                    className="text-slate-400 hover:text-cyan-400 hover:pl-2 transition-all duration-300 ease-in-out block"
-                                >
-                                    &gt; Project
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#contact"
-                                    className="text-slate-400 hover:text-cyan-400 hover:pl-2 transition-all duration-300 ease-in-out block"
-                                >
-                                    &gt; Contect
-                                </a>
-                            </li>
+                {/* Navigation Links */}
+                <div className="flex gap-16 font-mono text-sm">
+                    <div className="space-y-3">
+                        <h5 className="font-bold text-white uppercase tracking-wider text-xs">Navigation</h5>
+                        <ul className="space-y-2 text-[#c2c6d6]">
+                            <li><a href="#home" className="hover:text-[#adc6ff] transition-colors">Home</a></li>
+                            <li><a href="#expertise" className="hover:text-[#adc6ff] transition-colors">Expertise</a></li>
+                            <li><a href="#projects" className="hover:text-[#adc6ff] transition-colors">Projects</a></li>
+                            <li><a href="#contact" className="hover:text-[#adc6ff] transition-colors">Contact</a></li>
                         </ul>
                     </div>
-
-                    {/* Right Column: Click to Copy Box */}
-                    <div className="space-y-4">
-                        <p className="text-lg font-mono font-bold text-white tracking-wider uppercase">
-                            Copy Email
-                        </p>
-                        <p className="text-slate-400 font-mono text-sm">
-                            Click below to copy the developer email address directly to your clipboard.
-                        </p>
+                    <div className="space-y-3">
+                        <h5 className="font-bold text-white uppercase tracking-wider text-xs">Quick Copy</h5>
                         <div
                             onClick={copyToClipboard}
-                            className="flex items-center justify-between p-3.5 bg-slate-900 border border-white/10 rounded-xl cursor-pointer hover:bg-slate-800 hover:border-cyan-500/30 group transition-all duration-300"
+                            className="p-3 glass-card rounded-xl border border-white/10 flex items-center gap-2 cursor-pointer hover:border-[#adc6ff]/30 transition-colors"
                         >
-                            <span className="font-mono text-sm text-slate-300 group-hover:text-white truncate pr-2">
-                                {emailAddress}
-                            </span>
-                            <div className="flex items-center justify-center size-8 rounded-lg bg-slate-800 border border-white/5 group-hover:border-cyan-500/30 text-slate-400 group-hover:text-cyan-400 transition-all duration-300 shrink-0">
-                                {copied ? (
-                                    <Check className="size-4 text-emerald-400" />
-                                ) : (
-                                    <Copy className="size-4" />
-                                )}
-                            </div>
+                            <span className="text-xs text-[#c2c6d6] truncate max-w-[180px]">{emailAddress}</span>
+                            {copied ? <Check className="w-4 h-4 text-emerald-400 shrink-0" /> : <Copy className="w-4 h-4 text-[#adc6ff] shrink-0" />}
                         </div>
-                        {copied && (
-                            <p className="text-xs font-mono text-emerald-400 animate-pulse">
-                                ✓ Email successfully copied to clipboard!
-                            </p>
-                        )}
                     </div>
                 </div>
+            </div>
 
-                {/* Divider Line */}
-                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-                {/* Bottom Bar */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm font-mono text-slate-500">
-                    <p>© {new Date().getFullYear()} Vipul Suthar. All rights reserved.</p>
-                    <button
-                        onClick={scrollToTop}
-                        className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-white/5 rounded-lg text-slate-400 hover:text-white transition-all duration-300 ease-in-out cursor-pointer group"
-                    >
-                        <span>Back to Top</span>
-                        <ArrowUp className="size-4 group-hover:-translate-y-1 transition-transform" />
-                    </button>
-                </div>
-
+            {/* Bottom Bar */}
+            <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 text-xs font-mono text-[#c2c6d6]">
+                <div>© {new Date().getFullYear()} Vipul Suthar. Built with precision.</div>
+                <button
+                    onClick={scrollToTop}
+                    className="flex items-center gap-2 hover:text-[#adc6ff] transition-colors mt-4 md:mt-0 cursor-pointer"
+                >
+                    <span>Back to top</span>
+                    <ArrowUp className="w-4 h-4" />
+                </button>
             </div>
         </footer>
     );

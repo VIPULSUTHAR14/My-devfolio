@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { LayoutDashboard, ExternalLink, LogOut } from "lucide-react";
 
 export default async function DashboardLayout({
     children,
@@ -14,52 +15,45 @@ export default async function DashboardLayout({
     }
 
     return (
-        <div className="min-h-screen bg-slate-950 text-white">
-            {/* Background glow effects */}
+        <div className="min-h-screen bg-[#10131a] text-[#e1e2ec] font-sans selection:bg-[#adc6ff]/30">
+            {/* Background Glows */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[150px]" />
-                <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-sky-500/5 rounded-full blur-[150px]" />
+                <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-[#adc6ff]/5 rounded-full blur-[150px]" />
+                <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#ddb7ff]/5 rounded-full blur-[150px]" />
             </div>
 
             {/* Header */}
-            <header className="relative border-b border-slate-800/50 bg-slate-900/50 backdrop-blur-xl">
-                <div className="max-w-[90vw] mx-auto px-6 py-4 flex items-center justify-between">
+            <header className="sticky top-0 z-40 bg-[#10131a]/80 backdrop-blur-xl border-b border-white/10">
+                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-sky-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                            <svg
-                                className="w-5 h-5 text-white"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                                />
-                            </svg>
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#adc6ff] to-[#4d8eff] text-[#00285d] flex items-center justify-center shadow-lg shadow-[#adc6ff]/20">
+                            <LayoutDashboard className="w-5 h-5" />
                         </div>
                         <div>
-                            <h1 className="text-lg font-bold text-white">
-                                Dashboard
+                            <h1 className="text-lg font-extrabold text-white font-mono tracking-tight">
+                                ~/Vipul.Dev
                             </h1>
-                            <p className="text-xs text-slate-400">
-                                Portfolio Manager
+                            <p className="text-xs text-[#c2c6d6] font-mono">
+                                Admin Dashboard
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <span className="text-sm text-slate-400">
-                            {session.user?.name || session.user?.email}
-                        </span>
+                    <div className="flex items-center gap-6">
+                        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-[#191b23] border border-white/10 text-xs font-mono text-[#c2c6d6]">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>{session.user?.email}</span>
+                        </div>
+
                         <Link
                             href="/"
-                            className="text-xs text-slate-500 hover:text-cyan-400 transition-colors duration-200"
+                            target="_blank"
+                            className="text-xs font-mono text-[#c2c6d6] hover:text-[#adc6ff] flex items-center gap-1.5 transition-colors"
                         >
-                            View Site →
+                            <span>View Site</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
                         </Link>
+
                         <form
                             action={async () => {
                                 "use server";
@@ -71,9 +65,10 @@ export default async function DashboardLayout({
                         >
                             <button
                                 type="submit"
-                                className="px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-red-400 border border-slate-700 hover:border-red-500/30 rounded-lg transition-all duration-200 cursor-pointer"
+                                className="px-4 py-2 text-xs font-mono font-medium text-red-400 hover:text-white border border-red-500/30 hover:bg-red-500/20 rounded-xl transition-all duration-200 cursor-pointer flex items-center gap-1.5"
                             >
-                                Sign Out
+                                <LogOut className="w-3.5 h-3.5" />
+                                <span>Sign Out</span>
                             </button>
                         </form>
                     </div>
@@ -81,7 +76,7 @@ export default async function DashboardLayout({
             </header>
 
             {/* Main Content */}
-            <main className="relative max-w-[90vw] mx-auto px-6 py-8">
+            <main className="relative max-w-7xl mx-auto px-6 py-10">
                 {children}
             </main>
         </div>

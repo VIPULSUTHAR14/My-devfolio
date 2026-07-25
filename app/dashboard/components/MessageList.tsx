@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Mail, Trash2, Search, Calendar, User, Reply } from "lucide-react";
 
 interface Message {
     _id: string;
@@ -40,7 +41,6 @@ export default function MessageList({ messages, onMessageDeleted }: MessageListP
         }
     }
 
-    // Format date string beautifully
     function formatDate(dateString: string) {
         const date = new Date(dateString);
         return date.toLocaleDateString("en-US", {
@@ -52,7 +52,6 @@ export default function MessageList({ messages, onMessageDeleted }: MessageListP
         });
     }
 
-    // Filter messages based on search query
     const filteredMessages = messages.filter((msg) =>
         msg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         msg.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -61,88 +60,82 @@ export default function MessageList({ messages, onMessageDeleted }: MessageListP
 
     if (messages.length === 0) {
         return (
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-8 text-center max-w-3xl mx-auto">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
-                    <svg
-                        className="w-8 h-8 text-slate-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={1.5}
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                        />
-                    </svg>
+            <div className="glass-card rounded-3xl p-12 text-center max-w-3xl mx-auto border border-white/10 space-y-3">
+                <div className="w-14 h-14 mx-auto rounded-2xl bg-[#191b23] border border-white/5 flex items-center justify-center text-[#c2c6d6]">
+                    <Mail className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-300 mb-1">
-                    No messages yet
-                </h3>
-                <p className="text-sm text-slate-500">
-                    Messages submitted from the website&apos;s contact form will appear here.
-                </p>
+                <h4 className="text-lg font-bold text-white font-mono">No messages yet</h4>
+                <p className="text-xs text-[#c2c6d6] font-mono">Messages sent via the portfolio contact form will appear here</p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-6 max-w-3xl mx-auto">
-            {/* List Header and Search */}
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-6 max-w-4xl mx-auto">
+            {/* Header & Search */}
+            <div className="glass-card rounded-3xl p-6 border border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h2 className="text-xl font-bold text-white">Inbox Messages</h2>
-                    <p className="text-sm text-slate-400 mt-0.5">
-                        {messages.length} message{messages.length !== 1 ? "s" : ""} received
+                    <h3 className="text-xl font-bold text-white font-mono">Inbox Messages</h3>
+                    <p className="text-xs text-[#c2c6d6] font-mono mt-1">
+                        Total {messages.length} message{messages.length !== 1 ? "s" : ""} received
                     </p>
                 </div>
-                <div>
+
+                <div className="relative">
+                    <Search className="w-4 h-4 text-[#c2c6d6] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                         type="text"
-                        placeholder="Search inbox..."
+                        placeholder="Search messages..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="px-4 py-2 text-sm w-full sm:w-64 bg-slate-800/50 border border-slate-700/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all duration-200"
+                        className="pl-10 pr-4 py-2.5 text-xs font-mono w-full sm:w-64 bg-[#191b23] border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-[#adc6ff] transition-colors"
                     />
                 </div>
             </div>
 
-            {/* Messages Cards */}
+            {/* Message List Cards */}
             {filteredMessages.length === 0 ? (
-                <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-8 text-center text-slate-500">
-                    No messages match your search criteria.
+                <div className="glass-card rounded-3xl p-8 text-center text-xs font-mono text-[#c2c6d6] border border-white/10">
+                    No messages match your search filter.
                 </div>
             ) : (
                 <div className="space-y-4">
                     {filteredMessages.map((msg) => (
                         <div
                             key={msg._id}
-                            className="group relative bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-6 hover:bg-slate-900/80 hover:border-slate-600/50 transition-all duration-200 shadow-md"
+                            className="glass-card rounded-3xl p-6 border border-white/10 hover:border-[#adc6ff]/30 transition-all space-y-4 group relative"
                         >
                             {/* Card Header */}
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-4 mb-4">
-                                <div>
-                                    <h3 className="font-bold text-white text-base">
-                                        {msg.name}
-                                    </h3>
-                                    <a
-                                        href={`mailto:${msg.email}`}
-                                        className="text-xs text-cyan-400 hover:underline transition-colors block sm:inline"
-                                    >
-                                        {msg.email}
-                                    </a>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-[#adc6ff]/10 border border-[#adc6ff]/20 text-[#adc6ff] flex items-center justify-center font-bold font-mono text-sm shrink-0">
+                                        <User className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-white font-mono text-base">
+                                            {msg.name}
+                                        </h4>
+                                        <a
+                                            href={`mailto:${msg.email}`}
+                                            className="text-xs font-mono text-[#adc6ff] hover:underline transition-colors flex items-center gap-1 mt-0.5"
+                                        >
+                                            <span>{msg.email}</span>
+                                            <Reply className="w-3 h-3" />
+                                        </a>
+                                    </div>
                                 </div>
+
                                 <div className="flex items-center justify-between sm:justify-end gap-4">
-                                    <span className="text-xs text-slate-500 font-mono">
-                                        {formatDate(msg.createdAt)}
-                                    </span>
-                                    
-                                    {/* Delete Button */}
+                                    <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#c2c6d6]">
+                                        <Calendar className="w-3.5 h-3.5 text-[#c2c6d6]" />
+                                        <span>{formatDate(msg.createdAt)}</span>
+                                    </div>
+
+                                    {/* Delete Action */}
                                     <button
                                         onClick={() => handleDelete(msg._id)}
                                         disabled={deletingId === msg._id}
-                                        className="sm:opacity-0 sm:group-hover:opacity-100 p-2 rounded-lg hover:bg-red-500/10 text-slate-500 hover:text-red-400 transition-all duration-200 disabled:opacity-50 cursor-pointer"
+                                        className="p-2 rounded-xl bg-[#191b23] hover:bg-red-500/20 text-[#c2c6d6] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
                                         title="Delete message"
                                     >
                                         {deletingId === msg._id ? (
@@ -166,28 +159,16 @@ export default function MessageList({ messages, onMessageDeleted }: MessageListP
                                                 />
                                             </svg>
                                         ) : (
-                                            <svg
-                                                className="w-4 h-4"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                                strokeWidth={2}
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                                />
-                                            </svg>
+                                            <Trash2 className="w-4 h-4" />
                                         )}
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Card Content */}
-                            <div className="text-slate-300 text-sm font-mono whitespace-pre-wrap leading-relaxed">
+                            {/* Message Body */}
+                            <p className="text-sm text-[#e1e2ec] leading-relaxed whitespace-pre-wrap font-sans">
                                 {msg.message}
-                            </div>
+                            </p>
                         </div>
                     ))}
                 </div>

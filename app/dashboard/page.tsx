@@ -6,6 +6,7 @@ import SkillList from "./components/SkillList";
 import ProjectForm from "./components/ProjectForm";
 import ProjectList from "./components/ProjectList";
 import MessageList from "./components/MessageList";
+import { Wrench, FolderKanban, Inbox } from "lucide-react";
 
 interface Skill {
     _id: string;
@@ -99,167 +100,175 @@ export default function DashboardPage() {
     }, []);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchSkills();
         fetchProjects();
         fetchMessages();
     }, [fetchSkills, fetchProjects, fetchMessages]);
 
     return (
-        <div className="space-y-6 ">
-            {/* Tab Navigation */}
-            <div className="flex border-b border-slate-800/80 mb-6">
+        <div className="space-y-10">
+            {/* Tab Navigation Bar */}
+            <div className="inline-flex p-1.5 glass-card rounded-2xl border border-white/10 gap-2">
                 <button
                     onClick={() => setActiveTab("skills")}
-                    className={`px-6 py-3 font-semibold text-sm transition-all duration-200 border-b-2 cursor-pointer ${activeTab === "skills"
-                        ? "border-cyan-400 text-cyan-400"
-                        : "border-transparent text-slate-400 hover:text-slate-200"
-                        }`}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-mono text-sm font-semibold transition-all cursor-pointer ${
+                        activeTab === "skills"
+                            ? "bg-[#adc6ff] text-[#00285d] shadow-lg shadow-[#adc6ff]/20"
+                            : "text-[#c2c6d6] hover:text-white"
+                    }`}
                 >
-                    Skills
+                    <Wrench className="w-4 h-4" />
+                    <span>Skills ({skills.length})</span>
                 </button>
                 <button
                     onClick={() => setActiveTab("projects")}
-                    className={`px-6 py-3 font-semibold text-sm transition-all duration-200 border-b-2 cursor-pointer ${activeTab === "projects"
-                        ? "border-cyan-400 text-cyan-400"
-                        : "border-transparent text-slate-400 hover:text-slate-200"
-                        }`}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-mono text-sm font-semibold transition-all cursor-pointer ${
+                        activeTab === "projects"
+                            ? "bg-[#adc6ff] text-[#00285d] shadow-lg shadow-[#adc6ff]/20"
+                            : "text-[#c2c6d6] hover:text-white"
+                    }`}
                 >
-                    Projects
+                    <FolderKanban className="w-4 h-4" />
+                    <span>Projects ({projects.length})</span>
                 </button>
                 <button
                     onClick={() => setActiveTab("messages")}
-                    className={`px-6 py-3 font-semibold text-sm transition-all duration-200 border-b-2 cursor-pointer ${activeTab === "messages"
-                        ? "border-cyan-400 text-cyan-400"
-                        : "border-transparent text-slate-400 hover:text-slate-200"
-                        }`}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-mono text-sm font-semibold transition-all cursor-pointer ${
+                        activeTab === "messages"
+                            ? "bg-[#adc6ff] text-[#00285d] shadow-lg shadow-[#adc6ff]/20"
+                            : "text-[#c2c6d6] hover:text-white"
+                    }`}
                 >
-                    Messages
+                    <Inbox className="w-4 h-4" />
+                    <span>Messages ({messages.length})</span>
                 </button>
             </div>
 
-            {/* Tab Content Header */}
-            <div>
-                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-sky-500">
+            {/* Tab Header Title */}
+            <div className="space-y-2">
+                <h2 className="text-3xl font-extrabold text-white tracking-tight">
                     {activeTab === "skills"
                         ? "Skill Management"
                         : activeTab === "projects"
                             ? "Project Management"
                             : "Inbox Messages"}
-                </h1>
-                <p className="text-slate-400 mt-1">
+                </h2>
+                <p className="text-[#c2c6d6] text-sm">
                     {activeTab === "skills"
-                        ? "Add and manage the skills displayed on your portfolio"
+                        ? "Add, edit, or remove technical skills displayed on your portfolio."
                         : activeTab === "projects"
-                            ? "Add and manage the projects displayed on your portfolio"
-                            : "View and manage user messages sent from your portfolio website"}
+                            ? "Manage your portfolio projects, tech stacks, and live demo links."
+                            : "Read and manage incoming user messages submitted through your website."}
                 </p>
             </div>
 
-            {/* Tab Content Components */}
+            {/* Skills Tab Content */}
             {activeTab === "skills" && (
-                <div className="flex flex-col gap-8">
-                    {/* Form — takes 2 cols */}
-                    {/* <div className="lg:col-span-2">
-                        <SkillForm onSkillAdded={fetchSkills} />
-                    </div> */}
+                <div className="space-y-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        {/* Skill List */}
+                        <div className="lg:col-span-7">
+                            {skillsLoading ? (
+                                <div className="glass-card rounded-2xl p-12 flex items-center justify-center border border-white/10">
+                                    <svg
+                                        className="animate-spin w-8 h-8 text-[#adc6ff]"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                    >
+                                        <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                            className="opacity-25"
+                                        />
+                                        <path
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                            className="opacity-75"
+                                        />
+                                    </svg>
+                                </div>
+                            ) : (
+                                <SkillList
+                                    skills={skills}
+                                    onSkillDeleted={fetchSkills}
+                                    onEditSkill={setEditingSkill}
+                                />
+                            )}
+                        </div>
 
-                    {/* List — takes 3 cols */}
-                    <div className="lg:col-span-3">
-                        {skillsLoading ? (
-                            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-8 flex items-center justify-center">
-                                <svg
-                                    className="animate-spin w-8 h-8 text-cyan-500"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                >
-                                    <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        strokeWidth="4"
-                                        className="opacity-25"
-                                    />
-                                    <path
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                        className="opacity-75"
-                                    />
-                                </svg>
-                            </div>
-                        ) : (
-                            <SkillList
-                                skills={skills}
-                                onSkillDeleted={fetchSkills}
-                                onEditSkill={setEditingSkill}
+                        {/* Skill Form */}
+                        <div className="lg:col-span-5">
+                            <SkillForm
+                                onSkillAdded={handleSkillAddedOrUpdated}
+                                editSkill={editingSkill}
+                                onCancelEdit={() => setEditingSkill(null)}
+                                nextSkillNumber={nextSkillNumber}
                             />
-                        )}
-                    </div>
-                    <div className="lg:col-span-2">
-                        <SkillForm
-                            onSkillAdded={handleSkillAddedOrUpdated}
-                            editSkill={editingSkill}
-                            onCancelEdit={() => setEditingSkill(null)}
-                            nextSkillNumber={nextSkillNumber}
-                        />
+                        </div>
                     </div>
                 </div>
             )}
 
+            {/* Projects Tab Content */}
             {activeTab === "projects" && (
-                <div className="flex flex-col gap-8">
-                    {/* Form — takes 2 cols */}
-                    <div className="lg:col-span-2">
-                        <ProjectForm
-                            onProjectAdded={handleProjectAddedOrUpdated}
-                            skills={skills}
-                            editProject={editingProject}
-                            onCancelEdit={() => setEditingProject(null)}
-                        />
-                    </div>
-
-                    {/* List — takes 3 cols */}
-                    <div className="lg:col-span-3">
-                        {projectsLoading ? (
-                            <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-8 flex items-center justify-center">
-                                <svg
-                                    className="animate-spin w-8 h-8 text-cyan-500"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                >
-                                    <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="10"
-                                        stroke="currentColor"
-                                        strokeWidth="4"
-                                        className="opacity-25"
-                                    />
-                                    <path
-                                        fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                        className="opacity-75"
-                                    />
-                                </svg>
-                            </div>
-                        ) : (
-                            <ProjectList
-                                projects={projects}
-                                onProjectDeleted={fetchProjects}
-                                onEditProject={setEditingProject}
+                <div className="space-y-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        {/* Project Form */}
+                        <div className="lg:col-span-5">
+                            <ProjectForm
+                                onProjectAdded={handleProjectAddedOrUpdated}
+                                skills={skills}
+                                editProject={editingProject}
+                                onCancelEdit={() => setEditingProject(null)}
                             />
-                        )}
+                        </div>
+
+                        {/* Project List */}
+                        <div className="lg:col-span-7">
+                            {projectsLoading ? (
+                                <div className="glass-card rounded-2xl p-12 flex items-center justify-center border border-white/10">
+                                    <svg
+                                        className="animate-spin w-8 h-8 text-[#adc6ff]"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                    >
+                                        <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                            className="opacity-25"
+                                        />
+                                        <path
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                            className="opacity-75"
+                                        />
+                                    </svg>
+                                </div>
+                            ) : (
+                                <ProjectList
+                                    projects={projects}
+                                    onProjectDeleted={fetchProjects}
+                                    onEditProject={setEditingProject}
+                                />
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
 
+            {/* Messages Tab Content */}
             {activeTab === "messages" && (
                 <div>
                     {messagesLoading ? (
-                        <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-700/40 rounded-2xl p-8 flex items-center justify-center max-w-3xl mx-auto">
+                        <div className="glass-card rounded-2xl p-12 flex items-center justify-center max-w-3xl mx-auto border border-white/10">
                             <svg
-                                className="animate-spin w-8 h-8 text-cyan-500"
+                                className="animate-spin w-8 h-8 text-[#adc6ff]"
                                 viewBox="0 0 24 24"
                                 fill="none"
                             >

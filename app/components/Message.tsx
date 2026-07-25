@@ -1,6 +1,7 @@
-'use client'
-import { Briefcase, Mail, UserRound } from "lucide-react";
-import { useState, ChangeEvent, FormEvent } from "react";
+'use client';
+
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import { Mail, Clock, Check, AlertCircle } from "lucide-react";
 
 interface FormData {
     name: string;
@@ -66,79 +67,140 @@ export default function Message() {
     };
 
     return (
-        <div id="contact" className="w-[80vw] p-10" >
-            <div className="bg-slate-200/10 rounded-2xl flex justify-center items-center align-middle px-10 py-20" >
-                <div className=" flex flex-col items-start align-middle justify-center space-y-9 w-[50vw]" >
-                    <div className="flex justify-center align-middle items-center font-mono text-4xl " >Get In Touch</div>
-                    <div className="flex justify-center align-middle items-center  font-mono w-[30vw] " >Currently open for new opportunities. Whether you have a question or just want to say hi, I&apos;ll try my best to get back to you!</div>
-                    <div className="flex justify-center align-middle items-center space-x-6 pt-10" >
-                        <button className="font-mono text-sm bg-slate-800 border-2 rounded-full text-md   size-14 flex justify-center align-middle items-center cursor-pointer" >{`< >`}</button>
-                        <button className="font-mono text-sm bg-slate-800 border-2 rounded-full text-md   size-14 flex justify-center align-middle items-center cursor-pointer" ><Briefcase /></button>
-                        <button className="font-mono text-sm bg-slate-800 border-2 rounded-full text-md   size-14 flex justify-center align-middle items-center cursor-pointer" ><Mail /></button>
+        <section id="contact" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                {/* Left Contact Details */}
+                <div className="space-y-10">
+                    <div className="space-y-4">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#adc6ff]/10 border border-[#adc6ff]/20 text-[#adc6ff] font-mono text-xs font-semibold">
+                            <span className="w-2 h-2 rounded-full bg-[#adc6ff]"></span>
+                            Get In Touch
+                        </div>
+                        <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+                            Let&apos;s Build Something Great
+                        </h2>
+                        <p className="text-[#c2c6d6] text-lg leading-relaxed max-w-md">
+                            I&apos;m currently open for new opportunities and collaborations. Whether you have a question or just want to discuss a project, I&apos;ll try my best to get back to you!
+                        </p>
+                    </div>
+
+                    {/* Quick Info Badges */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full glass-card border border-[#adc6ff]/20 flex items-center justify-center text-[#adc6ff] shrink-0">
+                                <Mail className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <div className="text-xs text-[#c2c6d6] uppercase font-mono tracking-wider">Email Me</div>
+                                <div className="text-white font-bold font-mono">vipulsuthar9351@gmail.com</div>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-full glass-card border border-[#ddb7ff]/20 flex items-center justify-center text-[#ddb7ff] shrink-0">
+                                <Clock className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <div className="text-xs text-[#c2c6d6] uppercase font-mono tracking-wider">Response Time</div>
+                                <div className="text-white font-bold font-mono">&lt; 24 Hours</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="w-[50vw]" >
-                    <form
-                        onSubmit={handleSubmit}
-                        className="max-w-md mx-auto flex flex-col gap-4 p-6 rounded-xl"
-                    >
-                        <h2 className="text-xl font-mono flex align-middle items-center ">Name <UserRound className="ml-2" /> </h2>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Your Name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            disabled={loading}
-                            className="border rounded-lg p-3 outline-none bg-white place-content-center text-slate-900 disabled:opacity-60"
-                        />
-                        <h2 className="text-xl font-mono flex align-middle items-center gap-2" >Email <Mail /></h2>
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Your Email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                            disabled={loading}
-                            className="border rounded-lg p-3 outline-none bg-white text-slate-900 disabled:opacity-60"
-                        />
 
-                        <h2 className="text-xl font-mono flex align-middle items-center gap-2" >Message</h2>
-                        <textarea
-                            name="message"
-                            placeholder="Your Message"
-                            value={formData.message}
-                            onChange={handleChange}
-                            required
-                            disabled={loading}
-                            rows={5}
-                            className="border rounded-lg p-3 outline-none resize-none font-mono bg-white text-slate-900 disabled:opacity-60"
-                        />
+                {/* Right Form Card */}
+                <div className="glass-card rounded-[2rem] p-8 md:p-12 border border-white/10 relative">
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        {/* Name Field */}
+                        <div className="relative floating-label-input group">
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                                disabled={loading}
+                                placeholder=" "
+                                className="w-full bg-transparent border-0 border-b border-white/20 focus:ring-0 focus:border-[#adc6ff] pt-4 pb-2 text-white font-sans text-base transition-all peer outline-none disabled:opacity-60"
+                            />
+                            <label
+                                htmlFor="name"
+                                className="absolute left-0 top-4 text-[#c2c6d6] transition-all cursor-text peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-xs"
+                            >
+                                Full Name
+                            </label>
+                        </div>
 
-                        {/* Status Feedback */}
+                        {/* Email Field */}
+                        <div className="relative floating-label-input group">
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                disabled={loading}
+                                placeholder=" "
+                                className="w-full bg-transparent border-0 border-b border-white/20 focus:ring-0 focus:border-[#adc6ff] pt-4 pb-2 text-white font-sans text-base transition-all peer outline-none disabled:opacity-60"
+                            />
+                            <label
+                                htmlFor="email"
+                                className="absolute left-0 top-4 text-[#c2c6d6] transition-all cursor-text peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-xs"
+                            >
+                                Email Address
+                            </label>
+                        </div>
+
+                        {/* Message Field */}
+                        <div className="relative floating-label-input group">
+                            <textarea
+                                id="message"
+                                name="message"
+                                value={formData.message}
+                                onChange={handleChange}
+                                required
+                                disabled={loading}
+                                rows={4}
+                                placeholder=" "
+                                className="w-full bg-transparent border-0 border-b border-white/20 focus:ring-0 focus:border-[#adc6ff] pt-4 pb-2 text-white font-sans text-base transition-all peer resize-none outline-none disabled:opacity-60"
+                            />
+                            <label
+                                htmlFor="message"
+                                className="absolute left-0 top-4 text-[#c2c6d6] transition-all cursor-text peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-xs"
+                            >
+                                Your Message
+                            </label>
+                        </div>
+
+                        {/* Error Feedback */}
                         {error && (
-                            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono">
-                                {error}
-                            </div>
-                        )}
-                        {success && (
-                            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono">
-                                ✓ Message sent successfully! I will get back to you soon.
+                            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono flex items-center gap-2">
+                                <AlertCircle className="w-4 h-4 shrink-0" />
+                                <span>{error}</span>
                             </div>
                         )}
 
+                        {/* Success Feedback */}
+                        {success && (
+                            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono flex items-center gap-2">
+                                <Check className="w-4 h-4 shrink-0" />
+                                <span>✓ Message sent successfully! I will reply shortly.</span>
+                            </div>
+                        )}
+
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={loading}
-                            className="bg-slate-900 font-mono text-xl  text-white py-3 rounded-lg hover:opacity-90 transition border-b-8 border-slate-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            className="w-full py-4 bg-gradient-to-r from-[#adc6ff] to-[#ddb7ff] text-[#00285d] font-bold rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-lg shadow-[#adc6ff]/20 disabled:opacity-50 cursor-pointer"
                         >
-                            {loading ? "Sending..." : "Send Message"}
+                            {loading ? "Sending Message..." : "Send Message"}
                         </button>
                     </form>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }
